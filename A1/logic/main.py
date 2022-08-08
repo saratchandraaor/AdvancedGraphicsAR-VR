@@ -1,11 +1,11 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import glm
-import trimesh
-import moderngl
-import moderngl_window
-from moderngl_window import *
+# import glm
+# import trimesh
+# import moderngl
+# import moderngl_window
+# from moderngl_window import *
 import numpy as np
 from pathlib import Path
 from time import sleep
@@ -13,7 +13,7 @@ import keyboard
 from random import randint
 import cv2
 
-from boiler_plate.basics import basics
+# from boiler_plate.basics import basics
 
 global x1
 global y1
@@ -182,8 +182,8 @@ window = glutCreateWindow("Maze_Game")
 glutDisplayFunc(run)                                  
 glutIdleFunc(run)   
 
-texture = moderngl.basics().load_texture_2d.texture('data/textures/uv_tex.jpg')
-texture.use(0)
+# texture = moderngl.basics().load_texture_2d.texture('data/textures/uv_tex.jpg')
+# texture.use(0)
 
 glutMainLoop() 
 
