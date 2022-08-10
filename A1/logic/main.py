@@ -1,193 +1,88 @@
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-# import glm
-# import trimesh
-# import moderngl
-# import moderngl_window
-# from moderngl_window import *
 import numpy as np
-from pathlib import Path
-from time import sleep
 import keyboard
-from random import randint
-import cv2
 
-# from boiler_plate.basics import basics
-
-global x1
-global y1
-
-global char_width
-global char_height
-
-global all_walls
-
-window = 0                                           
-width, height = 1000,1000
-
-wall_width = width/10
-wall_height = height/10
-
-char_width = wall_width/5
-char_height = wall_height/5
-
-all_walls = []
-
-x1=0
-y1=0
+# from boiler_plate.draw import DrawTool
+from draw import DrawTool
+from world import World
 
 
-def refresh2d(width, height):
-    glViewport(0, 0, width, height)
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-    glOrtho(0.0, width, 0.0, height, 0.0, 1.0)
-    glMatrixMode (GL_MODELVIEW)
-    glLoadIdentity()
+window_height = 1000
+window_width = 1000
 
-def draw_rect(x, y, width, height):
-    glBegin(GL_QUADS)                                  
-    glVertex2f(x, y)                                   
-    glVertex2f(x + width, y)                           
-    glVertex2f(x + width, y + height)                  
-    glVertex2f(x, y + height)                          
-    glEnd()  
+char_height = window_height/20
+char_width = window_width/20
 
-def check_collision():
-    fl = 0
-    for i in all_walls:
-        wx1 = i[0]
-        wy1 = i[1]
+char_x = window_width/2
+char_y = window_height/2
 
-        w_width = wall_width/i[2]
-        w_height = wall_height/i[3]
+vertices = [2*char_x/window_width-1, 2*char_y/window_height-1,  0.0,  1.0, 0.0, 0.0,  0.0, 1.0 ,
+             (2*char_x+char_width)/window_width-1, 2*char_y/window_height-1,  0.0,  0.0, 1.0, 0.0,  0.0, 0.0,
+             (2*char_x+char_width)/window_width-1,  (2*char_y+char_height)/window_height-1,  0.0,  0.0, 0.0, 1.0, 1.0, 0.0, 
+             2*char_x/window_width-1,  (2*char_y+char_height)/window_height-1,  0.0,  1.0, 1.0, 1.0, 1.0, 1.0]
 
-        px1 = x1
-        py1 = y1
+wall_width = window_width/20
+wall_height = window_height/20
 
-        wx = wx1+w_width/2
-        wy = wy1+w_height/2
+world = World(window_width,window_height)
+draw_tool = DrawTool(window_width,window_height)
+draw_tool.load_shader()
 
-        px = px1+char_width/2
-        py = py1+char_height/2
+image,img_data = draw_tool.open_image(type='char',path='/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/char.png')
+image_w,img_data_w = draw_tool.open_image(type='wall',path='/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/wall2.jpg')
+image_m,img_data_m = draw_tool.open_image(type='mud',path='/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/mud2.jpg')
 
-        dx = wx-px
-        dy = wy-py
-        
-        ret = []
+wall_vertices, wall_coords = world.get_walls(wall_width,wall_height)
+mud_vertices = world.get_mud()
 
-        if dx>0 and abs(dx)<= (w_width+char_width)/2+1 and abs(dy) <= (w_height+char_height)/2+1:
-            fl = 1
-            ret.append('d')
-        
-        if dx<=0 and abs(dx)<= (w_width+char_width)/2+1 and abs(dy) <= (w_height+char_height)/2+1:
-            fl = 1
-            ret.append('a')
+print(len(wall_coords))
 
-        if dy<=0 and abs(dx)<= (w_width+char_width)/2+1 and abs(dy) <= (w_height+char_height)/2+1:
-            fl = 1
-            ret.append('s')
-        
-        if dy>0 and abs(dx)<= (w_width+char_width)/2+1 and abs(dy) <= (w_height+char_height)/2+1:
-            fl = 1
-            ret.append('w')
-        if fl == 1:
-            break
-    print(ret)
-    return ret
+while not draw_tool.window_close():
+    draw_tool.clear()
 
-def run():                                            
-    global all_walls
-    global x1
-    global y1
-    global char_height
-    global char_width
+    # Keyboard_control
+    cc = world.check_collision(wall_coords,char_x,char_y,char_width,char_height)
+    sp = 10
+    if keyboard.is_pressed("d"):
+        if not 'd' in cc:
+            char_x+=sp
+        else:
+            char_x-=0
+            pass
+    if keyboard.is_pressed("a"):
+        if not 'a' in cc:
+            char_x-=sp
+        else:
+            char_x+=0
+            pass
 
-    for i in range(10):
-        for j in range(10):
-            if randint(0,1) == 1:
-                ki = randint(1,2)
-                kj = randint(1,2)
-                all_walls.append([wall_width*i,wall_height*j,ki,kj])
+    if keyboard.is_pressed("w"):
+        if not 'w' in cc:
+            char_y+=sp       
+        else:
+            char_y-=0
+            pass
 
-    # i = 5
-    # j = 5
-    # ki = 0.5
-    # kj = 0.5
-    # all_walls.append([wall_width*i,wall_height*j,ki,kj])
+    if keyboard.is_pressed("s"):
+        if not 's' in cc:
+            char_y-=sp
+        else:
+            char_y+=0
+            pass
+
+
+    vertices = [2*char_x/window_width-1, 2*char_y/window_height-1,  0.0,  1.0, 0.0, 0.0,  0.0, 0.0,
+             (2*char_x+char_width)/window_width-1, 2*char_y/window_height-1,  0.0,  0.0, 1.0, 0.0,  1.0, 0.0,
+             (2*char_x+char_width)/window_width-1,  (2*char_y+char_height)/window_height-1,  0.0,  0.0, 0.0, 1.0,  1.0, 1.0,
+             2*char_x/window_width-1,  (2*char_y+char_height)/window_height-1,  0.0,  1.0, 1.0, 1.0,  0.0, 1.0]
     
-    print(all_walls)
-
-    while True:
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) 
-        glLoadIdentity()                                   
-        refresh2d(width, height)                     
+    vertices = np.array(vertices,dtype=np.float32)
+    draw_tool.draw(vertices, image, img_data)
+    for i in wall_vertices:
+        draw_tool.draw(vert= i,image=image_w,img_data=img_data_w)
     
-        ############ Keyboard control
-        cc = check_collision()
 
-        # print(cc)
-        
-        # if 'd' in cc:
-        #     x1 -= 5
-        # if 'a' in cc:
-        #     x1 += 5
-        # if 'w' in cc:
-        #     y1 -= 5
-        # if 's' in cc:
-            # y1 += 5
+    draw_tool.draw(mud_vertices,image_m,img_data_m)
 
+    draw_tool.swap_buffers()
 
-
-        if keyboard.is_pressed("d"):
-            if not 'd' in cc:
-                x1+=5
-            else:
-                x1 -= 7
-        if keyboard.is_pressed("a"):
-            if not 'a' in cc :
-                x1-=5
-            else:
-                x1+=7
-        if keyboard.is_pressed("w"):
-            if not 'w' in cc:
-                y1+=5
-            else:
-                y1-=7
-        if keyboard.is_pressed("s"):
-            if not 's' in cc:
-                y1-=5
-            else:
-                y1+=7
-        # if keyboard.is_pressed("q"):
-        #     break
-            
-        sleep(0.01)
-
-        for i in all_walls:
-            draw_rect(i[0],i[1],wall_width/i[2],wall_height/i[3])
-        
-        draw_rect(x1,y1,char_width,char_height)                        
-    
-        glutSwapBuffers() 
-
-
-
-glutInit()                                             
-glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
-glutInitWindowSize(width, height)                      
-glutInitWindowPosition(0, 0)                           
-window = glutCreateWindow("Maze_Game")              
-glutDisplayFunc(run)                                  
-glutIdleFunc(run)   
-
-# texture = moderngl.basics().load_texture_2d.texture('data/textures/uv_tex.jpg')
-# texture.use(0)
-
-glutMainLoop() 
-
-
-# texture_image = cv2.imread("char.png")
-# texture = ctx.texture(texture_image.shape[1::-1], texture_image.shape[2], texture_image)
-# texture.use(0)
+draw_tool.terminate()

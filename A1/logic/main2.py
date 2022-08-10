@@ -13,6 +13,15 @@ from maps import generate_walls
 window_height = 1000
 window_width = 1000
 
+if not glfw.init():
+    print("UNABLE TO INIT GLFW")
+    raise Exception("glfw can not be initialized!")
+window = glfw.create_window(window_width,window_height, "Maze_Game", None, None)
+if not window:
+    glfw.terminate()
+    raise Exception("glfw window can not be created!")
+
+
 vertex_src = """
 # version 330
 layout(location = 0) in vec3 a_position;
@@ -133,7 +142,7 @@ def check_collision():
 
     return ret
 
-if not glfw.init():
+# if not glfw.init():
     raise Exception("glfw can not be initialized!")
 
 window = glfw.create_window(window_width,window_height, "Maze_Game", None, None)
@@ -159,18 +168,17 @@ vertices = [2*char_x/window_width-1, 2*char_y/window_height-1,  0.0,  1.0, 0.0, 
              2*char_x/window_width-1,  (2*char_y+char_height)/window_height-1,  0.0,  1.0, 1.0, 1.0, 1.0, 1.0]
 
 indices = [0,  1,  2,  2,  3,  0]
-
 indices = np.array(indices, dtype=np.uint32)
 
-image = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/logic/char.webp")
+image = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/char.webp")
 image = image.transpose(Image.FLIP_TOP_BOTTOM)
 img_data = image.convert("RGBA").tobytes()
 
-image_w = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/logic/wall2.jpg")
+image_w = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/wall2.jpg")
 image_w = image_w.transpose(Image.FLIP_TOP_BOTTOM)
 img_data_w = image_w.convert("RGBA").tobytes()
 
-image_m = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/logic/mud2.jpg")
+image_m = Image.open("/home/ysk/Documents/SMAI ASSIGNMENT_1/A1/boiler_plate/data/textures/mud2.jpg")
 image_m = image_m.transpose(Image.FLIP_TOP_BOTTOM)
 img_data_m = image_m.convert("RGBA").tobytes()
 
@@ -188,7 +196,6 @@ wall_coords= []
 wall_width = window_width/20
 wall_height = window_height/20
 
-# wall_coords.append([500,500,100,100])
 
 wall_coords = generate_walls(width=window_width,height=window_height,w_width=wall_width,w_height=wall_height)
 
@@ -292,7 +299,7 @@ while not glfw.window_should_close(window):
     draw(mud_vertices,indices,image_m,img_data_m)
 
 
-#Keyboard_control
+# Keyboard_control
     cc = check_collision()
     sp = 10
     if keyboard.is_pressed("d"):
