@@ -8,7 +8,7 @@ class World:
         self.height = height
 
     def generate_walls(self,w_height,w_width):
-        l0 = [ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        l0 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -16,17 +16,17 @@ class World:
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
         l01 = [ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -39,7 +39,7 @@ class World:
             [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1],
             [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -61,7 +61,7 @@ class World:
                     wall_coords.append([self.width*i/20,self.height*j/20,w_width,w_height])
         return wall_coords
 
-    def check_collision(self,wall_coords,char_x,char_y,char_width,char_height):
+    def check_collision(self,wall_coords,char_x,char_y,char_width,char_height,direction):
 
         ret = []
 
@@ -76,33 +76,45 @@ class World:
             px1 = char_x
             py1 = char_y
 
-            wx = wx1+w_width/2
-            wy = wy1+w_height/2
+            wx = wx1-w_width/2
+            wy = wy1-w_height/2
 
-            px = px1+char_width/2
-            py = py1+char_height/2
+            px = px1-char_width/2
+            py = py1-char_height/2
 
             dx = wx-px
             dy = wy-py
             
-            d = 1
-            if dx>0 and abs(dx)<= (w_width+char_width)/2 +d and abs(dy) <= (w_height+char_height)/2 + d:
-                fl = 1
-                ret.append('d')
+            d = -2
+            if direction == 'd':
+                if dx>0 and abs(dx)<= (w_width+char_width)/4 +d and abs(dy) <= (w_height+char_height)/2 + 2*d:
+                    fl = 1
+                    # ret.append('d')
+                    return True
+                
             
-            if dx<0 and abs(dx)<= (w_width+char_width)/2+d and abs(dy) <= (w_height+char_height)/2+d:
-                fl = 1
-                ret.append('a')
-
-            if dy<=0 and abs(dx)<= (w_width+char_width)/2 +d and abs(dy) <= (w_height+char_height)/2+d:
-                fl = 1
-                ret.append('s')
+            if direction == 'a':
+                if dx<0 and abs(dx)<= (w_width+char_width)/2+d and abs(dy) <= (w_height+char_height)/2+2*d:
+                    fl = 1
+                    # ret.append('a')
+                    return True
             
-            if dy>0 and abs(dx)<= (w_width+char_width)/2 +d and abs(dy) <= (w_height+char_height)/2+d:
-                fl = 1
-                ret.append('w')
 
-        return ret
+            if direction == 's':
+                if dy<0 and abs(dx)<= (w_width+char_width)/2 +2*d and abs(dy) <= (w_height+char_height)/2+d:
+                    fl = 1
+                    # ret.append('s')
+                    return True
+               
+            
+            if direction == 'w':
+                if dy>0 and abs(dx)<= (w_width+char_width)/2 +2*d and abs(dy) <= (w_height+char_height)/4+d:
+                    fl = 1
+                    # ret.append('w')
+                    return True
+                
+
+        return False
 
     def get_walls(self,wall_width,wall_height):
         wall_coords = self.generate_walls(w_width=wall_width,w_height=wall_height)
@@ -174,3 +186,5 @@ class World:
 
         return mud_vertices
 
+    def illumination(self, char_x, char_y, objects):
+        pass

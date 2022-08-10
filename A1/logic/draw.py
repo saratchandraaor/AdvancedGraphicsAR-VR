@@ -91,6 +91,7 @@ class DrawTool:
             //v_texture = vec2(a_texture.s, 1 - a_texture.t); // Flips the texture vertically
         }
         """
+        ##chande out_color for illumination
         self.fragment_src = """
         # version 330
         in vec3 v_color;
@@ -99,7 +100,7 @@ class DrawTool:
         uniform sampler2D s_texture;
         void main()
         {
-            out_color = texture(s_texture, v_texture); // * vec4(v_color, 1.0f);
+            out_color = texture(s_texture, v_texture)/1; // * vec4(v_color, 1.0f);
         }
         """
 
