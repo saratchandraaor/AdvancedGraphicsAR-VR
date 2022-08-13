@@ -3,9 +3,14 @@ from OpenGL.GL.shaders import compileProgram, compileShader
 import glfw
 import numpy as np
 from PIL import Image
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+import OpenGL.GLUT.fonts
+import OpenGL.GLUT as glut
+import OpenGL.GLUT.fonts as glf
+import OpenGL.GL as gl
 
 
-# glfw.init()
 if not glfw.init():
     raise Exception("glfw can not be initialized!")
 window = glfw.create_window(1000,1000, "Maze_Game", None, None)
@@ -13,10 +18,13 @@ if not window:
     glfw.terminate()
     raise Exception("glfw window can not be created!")
 
+
+glut.glutInit()
+
+
 class DrawTool:
     
     def __init__(self,width,height):
-        print("init")
         self.window = window
         
         self.width = width
@@ -41,29 +49,63 @@ class DrawTool:
         }
         """
 
+    def drawString(self,string_data):
+
+        width = 1000
+        height = 1000
+        line_height = 200
+        _font =  glf.GLUT_BITMAP_9_BY_15
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPushMatrix()
+        gl.glLoadIdentity()
+
+        gl.glOrtho(0, width, 0, height, -1, 1)
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPushMatrix()
+        gl.glLoadIdentity()
+
+        gl.glDisable(gl.GL_DEPTH_TEST)
+
+        gl.glDisable(gl.GL_LIGHTING)
+        gl.glColor3f(1, 0, 0)
+
+        pos = 20
+        gl.glRasterPos2i(10, height - pos)
+
+        for ch in string_data:
+            if ch == '\n':
+                pos = pos + line_height
+                gl.glRasterPos2i(10, height - pos)
+            else:
+                glut.glutBitmapCharacter(_font, ord(ch))
+
+        gl.glEnable(gl.GL_LIGHTING)
+        gl.glEnable(gl.GL_DEPTH_TEST)
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPopMatrix()
+
+
 
     def window_resize(self):
-        print("resize")
         glViewport(0, 0, self.width, self.height)
 
     def window_close(self):
-        print("close")
 
         return glfw.window_should_close(self.window)
 
     def clear(self):
-        print("close")
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
     def swap_buffers(self):
-        print("swap")
 
         glfw.swap_buffers(self.window)
 
 
     def terminate(self):
-        print("terminate")
 
         glfw.terminate()
 
@@ -85,6 +127,57 @@ class DrawTool:
             self.img_data_m = self.image_m.convert("RGBA").tobytes()
             return [self.image_m,self.img_data_m]
     
+        if type == 'button':
+            self.image_b = Image.open(path)
+            self.image_b = self.image_b.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_b = self.image_b.convert("RGBA").tobytes()
+            return [self.image_b,self.img_data_b]
+
+        if type == 'enemy':
+            self.image_e = Image.open(path)
+            self.image_e = self.image_e.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_e = self.image_e.convert("RGBA").tobytes()
+            return [self.image_e,self.img_data_e]
+
+        if type == 'task':
+            self.image_t = Image.open(path)
+            self.image_t = self.image_t.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_t = self.image_t.convert("RGBA").tobytes()
+            return [self.image_t,self.img_data_t]
+
+        if type == 'obstacle':
+            self.image_o = Image.open(path)
+            self.image_o = self.image_o.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_o = self.image_o.convert("RGBA").tobytes()
+            return [self.image_o,self.img_data_o]
+
+        if type == 'exit':
+            self.image_exit = Image.open(path)
+            self.image_exit = self.image_exit.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_exit = self.image_exit.convert("RGBA").tobytes()
+            return [self.image_exit,self.img_data_exit]
+
+        if type == 'gameover':
+            self.image_gameover = Image.open(path)
+            self.image_gameover = self.image_gameover.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_gameover = self.image_gameover.convert("RGBA").tobytes()
+            return [self.image_gameover,self.img_data_gameover]
+
+        if type == 'powerup':
+            self.image_p = Image.open(path)
+            self.image_p = self.image_p.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_p = self.image_p.convert("RGBA").tobytes()
+            return [self.image_p,self.img_data_p]
+
+        if type == 'pbutton':
+            self.image_pb = Image.open(path)
+            self.image_pb = self.image_pb.transpose(Image.FLIP_TOP_BOTTOM)
+            self.img_data_pb = self.image_pb.convert("RGBA").tobytes()
+            return [self.image_pb,self.img_data_pb]
+
+
+
+
     def load_shader(self,fragment_src):
         self.vertex_src = """
         # version 330
@@ -138,9 +231,7 @@ class DrawTool:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         
-    
     def draw(self,vert, image, img_data):
-        print("draw")
 
         glBufferData(GL_ARRAY_BUFFER, vert.nbytes, vert, GL_STATIC_DRAW)
 
