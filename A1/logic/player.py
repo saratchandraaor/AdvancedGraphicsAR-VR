@@ -1,5 +1,6 @@
 from random import randint
 import numpy as np
+from time import time
 
 class Player:
     def __init__(self,button_width,button_height,enemy_width,enemy_height):
@@ -35,7 +36,12 @@ class Player:
 
         self.exit = False
 
+        self.time = 0
+
+
     def get_player_stats(self):
+        self.time =  time()
+
         return [self.health,self.score,self.tasks_done]
     
     def get_button(self,wall_coords,width,height):
@@ -509,10 +515,9 @@ class Player:
                 self.pbutton_state = False
 
     def check_task_status(self,char_x,char_y,char_width,char_height,task_coords):
-        if abs(char_x-task_coords[0])<=(char_width+task_coords[2])/2 and abs(char_y-task_coords[1])<=(char_height+task_coords[3])/2:
+        if abs(char_x-task_coords[0])<=(char_width+task_coords[2])/2 and abs(char_y-task_coords[1])<=(char_height+task_coords[3])/2 and self.task_state:
             self.task_state = False
             self.tasks_done += 1
-            self.score += 1000
 
     def check_obstacle_status(self,char_x,char_y,char_width,char_height,obstacle_coords,i):
         if self.obstacle_state[i] and abs(char_x-self.obstacle_coords[i][0])<=(char_width+self.obstacle_coords[i][2])/2 and abs(char_y-self.obstacle_coords[i][1])<=(char_height+self.obstacle_coords[i][3])/2:
@@ -520,11 +525,71 @@ class Player:
             self.health -= 400
 
 
-    def enemy_movement(self,char_x,char_y, wall_coords=None):
+
+    def check_collision(self,wall_coords,char_x,char_y,char_width,char_height,direction=None):
+
+        ret = []
+
+        for i in wall_coords:
+
+            wx1 = i[0]
+            wy1 = i[1]
+
+            w_width = i[2]
+            w_height = i[3]
+
+            px1 = char_x
+            py1 = char_y
+
+            wx = wx1-w_width/2
+            wy = wy1-w_height/2
+
+            px = px1-char_width/2
+            py = py1-char_height/2
+
+            dx = wx-px
+            dy = wy-py
+            
+            d = -2
+            # if direction == 'd':
+            if dx>0 and abs(dx)<= (w_width+char_width)/4 +d and abs(dy) <= (w_height+char_height)/2 + 2*d:
+                fl = 1
+                ret.append('d')
+                # return True
+                
+            
+        # if direction == 'a':
+            if dx<0 and abs(dx)<= (w_width+char_width)/2+d and abs(dy) <= (w_height+char_height)/2+2*d:
+                fl = 1
+                ret.append('a')
+                # return True
+        
+
+        # if direction == 's':
+            if dy<0 and abs(dx)<= (w_width+char_width)/2 +2*d and abs(dy) <= (w_height+char_height)/2+d:
+                fl = 1
+                ret.append('s')
+                # return True
+            
+        
+        # if direction == 'w':
+            if dy>0 and abs(dx)<= (w_width+char_width)/2 +2*d and abs(dy) <= (w_height+char_height)/4+d:
+                fl = 1
+                ret.append('w')
+                # return True
+                
+
+        return ret
+
+
+    def enemy_movement(self,char_x,char_y,enemy_width,enemy_height, wall_coords=None):
         enemy_x,enemy_y = self.enemy_coords[0],self.enemy_coords[1]
         width = 1000
         height = 1000
-        sp = 2
+        sp = 1
+
+        cce = self.check_collision(wall_coords,enemy_x,enemy_y,enemy_width*2,enemy_height*2)
+
         try:
             dx = sp*(char_x-enemy_x)/abs(char_x-enemy_x+char_y-enemy_y)
         except:
@@ -536,9 +601,20 @@ class Player:
             dy = sp*(char_y-enemy_y)/abs(char_x-enemy_x+char_y-enemy_y+0.1)
 
 
+        if dx>0 and 'd' in cce:
+            dx = 0
+
+        if dx<0 and 'a' in cce:
+            dx = 0
+        
+        if dy>0 and 'w' in cce:
+            dy = 0
+        
+        if dy<0 and 's' in cce:
+            dy = 0
+
         self.enemy_coords[0] =enemy_x+dx
         self.enemy_coords[1] =enemy_y+dy
-        print(dx,dy,"dx and dy")
         wall_v = []
         i = self.enemy_coords
         if True:

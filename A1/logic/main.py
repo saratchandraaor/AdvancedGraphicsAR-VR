@@ -1,9 +1,9 @@
-from time import sleep
+from time import sleep, time
 import numpy as np
 import keyboard
 
 from boiler_plate.draw import DrawTool
-# from hud import HUD
+from boiler_plate.hud import HUD
 from logic.world import World
 from logic.player import Player
 lights = 1
@@ -65,9 +65,9 @@ draw_tool.load_shader(fragment_src)
 
 image,img_data = draw_tool.open_image(type='char',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/char.png')
 image_w,img_data_w = draw_tool.open_image(type='wall',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/wall2.jpg')
-image_m,img_data_m = draw_tool.open_image(type='mud',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/mud2.jpg')
+image_m,img_data_m = draw_tool.open_image(type='mud',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/brown_mud.png')
 image_b,img_data_b = draw_tool.open_image(type='button',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/button.png')
-image_e,img_data_e = draw_tool.open_image(type='enemy',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/enemy.png')
+image_e,img_data_e = draw_tool.open_image(type='enemy',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/enemy.webp')
 image_t,img_data_t = draw_tool.open_image(type='task',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/task.png')
 image_p,img_data_p = draw_tool.open_image(type='powerup',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/powerup.png')
 image_pb,img_data_pb = draw_tool.open_image(type='pbutton',path='/home/ysk/Documents/AG/A1/boiler_plate/data/textures/pbutton.png')
@@ -90,8 +90,6 @@ player = Player(button_width,button_height,enemy_width,enemy_height)
 
 button_vertices, button_coords = player.get_button(wall_coords,window_width,window_height)
 pbutton_vertices, pbutton_coords = player.get_pbutton(wall_coords,window_width,window_height)
-
-##Edit from here
 
 enemy_vertices, enemy_coords = player.get_enemy(wall_coords,window_width,window_height)
 task_vertices, task_coords = player.get_task(wall_coords,window_width,window_height)
@@ -116,46 +114,51 @@ exit_vertices,exit_coords = world.create_exit(wall_width,wall_height)
 powerup_vertices = [np.array(i,dtype=np.float32) for i in powerup_vertices]
 
 
-# hud = HUD()
+hud = HUD()
+
 
 while not draw_tool.window_close():
+    player.exit = hud.display(player.score,player.health,player.tasks_done,player.tasks_total,20)
 
     draw_tool.load_shader(fragment_src)
     draw_tool.clear()
 
     print(player.get_player_stats())
 
-    # draw_tool.render_text()
-
-    # draw_tool.raster()
-
     # Keyboard_control
-    # cc = world.check_collision(wall_coords,char_x,char_y,char_width,char_height)
+    cc = world.check_collision(wall_coords,char_x,char_y,char_width,char_height)
     sp = 20
     if keyboard.is_pressed("d"):
-        if not world.check_collision(wall_coords,char_x,char_y,char_width,char_height,'d'):
+        if not 'd' in cc:
             char_x+=sp
+            if lights==0:
+                player.score+=2
         else:
             char_x-=0
             pass
     if keyboard.is_pressed("a"):
-        if not world.check_collision(wall_coords,char_x,char_y,char_width,char_height,'a'):
+        if not 'a' in cc:
             char_x-=sp
+            if lights==0:
+                player.score+=2
         else:
             char_x+=0
             pass
 
     if keyboard.is_pressed("w"):
-        # if not 'w' in cc:
-        if not world.check_collision(wall_coords,char_x,char_y,char_width,char_height,'w'):
-            char_y+=sp       
+        if not 'w' in cc:
+            char_y+=sp   
+            if lights==0:
+                player.score+=2   
         else:
             char_y-=0
             pass
 
     if keyboard.is_pressed("s"):
-        if not world.check_collision(wall_coords,char_x,char_y,char_width,char_height,'s'):
+        if not 's' in cc:
             char_y-=sp
+            if lights==0:
+                player.score+=2
         else:
             char_y+=0
             pass
@@ -185,10 +188,10 @@ while not draw_tool.window_close():
     player.check_health_status()
     player.check_pbutton_status(char_x,char_y,char_width,char_height,pbutton_coords)
 
-    # enemy_coords = player.enemy_movement(char_x,char_y,enemy_coords)
     
     # draw_tool.clear()
     # hud.draw(window_width,window_height)
+    enemy_vertices,enemy_coords =player.enemy_movement(char_x,char_y,enemy_width,enemy_height,wall_coords)
     
     if lights == 0:
 
@@ -271,8 +274,6 @@ while not draw_tool.window_close():
                     draw_tool.load_shader(fragment_src)
                 else:
                     draw_tool.load_shader(fragment_src_dark)
-                enemy_vertices,enemy_coords =player.enemy_movement(char_x,char_y)
-                print("ENEMY")
                 draw_tool.draw(enemy_vertices,image_e,img_data_e)
 
             for i in range(len(wall_vertices)):
@@ -302,8 +303,6 @@ while not draw_tool.window_close():
             
             if player.enemy_state:
                 draw_tool.draw(button_vertices, image_b, img_data_b)
-                enemy_vertices,enemy_coords =player.enemy_movement(char_x,char_y)
-                print("ENEMY")
                 draw_tool.draw(enemy_vertices,image_e,img_data_e)
 
 
@@ -350,9 +349,10 @@ while not draw_tool.window_close():
             #     draw_tool.draw(vert= mud_vertices[i],image=image_m,img_data=img_data_m)
             
         
-    draw_tool.drawString("HELLO")
+    # draw_tool.drawString("HELLO")
 
 
     draw_tool.swap_buffers()
 
+hud.quit()
 draw_tool.terminate()
