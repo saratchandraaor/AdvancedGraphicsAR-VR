@@ -72,10 +72,10 @@ class World:
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
         l03 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -93,10 +93,10 @@ class World:
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
         l04 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -115,8 +115,7 @@ class World:
 
         
         l = [l01,l02,l03,l04]
-        # l = l[randint(0,3)]
-        l = l02
+        l = l[randint(0,3)]
         wall_coords = []
         for i in range(len(l)):
             for j in range(len(l[i])):
@@ -386,18 +385,23 @@ class World:
             return int(num)
 
     def check_walls_lights_off(self,char_x,char_y,tile_x,tile_y,wall_coords):
-        char_x = 100*self.roundoff(char_x/100)
-        char_y = 100*self.roundoff(char_y/100)
+        n = 100
+        char_x = n*self.roundoff(char_x/n)
+        char_y = n*self.roundoff(char_y/n)
 
-        tile_x = 100*self.roundoff(tile_x/100)
-        tile_y = 100*self.roundoff(tile_y/100)
+        tile_x = n*self.roundoff(tile_x/n)
+        tile_y = n*self.roundoff(tile_y/n)
 
-        k = 20
-
+        k = 10
         for i in wall_coords:
-            if ((i[0]<tile_x and i[0]>char_x) or (i[0]>tile_x and i[0]<char_x)) and (i[1]<(char_y+tile_y)/2 + k and i[1]>(char_y+tile_y)/2 - k):
+            if ((i[0]<=tile_x and i[0]>char_x) or (i[0]>tile_x and i[0]<char_x)) and (i[1]<(char_y+tile_y)/2 + k and i[1]>(char_y+tile_y)/2 - k):
                 return True
-            if ((i[1]<tile_y and i[1]>char_y) or (i[1]>tile_y and i[1]<char_y)) and (i[0]<(char_x+tile_x)/2 + k and i[0]>(char_x+tile_x)/2 - k):
+            if ((i[1]<=tile_y and i[1]>char_y) or (i[1]>tile_y and i[1]<char_y)) and (i[0]<(char_x+tile_x)/2 + k and i[0]>(char_x+tile_x)/2 - k):
                 return True
-
+            try:
+                if ((i[1]-char_y)/(i[0]-char_x) == (i[1]-tile_y)/(i[0]-char_x)) and ((i[1]<=tile_y and i[1]>char_y) or (i[1]>tile_y and i[1]<char_y)) and ((i[0]<=tile_x and i[0]>char_x) or (i[0]>tile_x and i[0]<char_x)):
+                    return True
+            except:
+                if ((i[1]-char_y)/(i[0]-char_x+0.001) == (i[1]-tile_y)/(i[0]-tile_x+0.001)) and ((i[1]<=tile_y and i[1]>char_y) or (i[1]>tile_y and i[1]<char_y)) and ((i[0]<=tile_x and i[0]>char_x) or (i[0]>tile_x and i[0]<char_x)):
+                    return True
         return False

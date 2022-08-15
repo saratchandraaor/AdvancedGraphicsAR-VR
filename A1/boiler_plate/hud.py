@@ -8,7 +8,7 @@ GRAY = (200, 200, 200)
 RED = (255,0,0)
 GREEN = (0,255,0)
 BLACK = (0,0,0)
-BROWN = (60,40,0)
+BROWN = (60*2.55,40*2.55,0)
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,0)
 

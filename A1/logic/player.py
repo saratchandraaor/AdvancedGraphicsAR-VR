@@ -586,9 +586,9 @@ class Player:
         width = 1000
         height = 1000
         if lights == 0:
-            sp = 4
+            sp = 3
         else:
-            sp = 2
+            sp = 5
 
         cce = self.check_collision(wall_coords,enemy_x,enemy_y,enemy_width*2,enemy_height*2)
 

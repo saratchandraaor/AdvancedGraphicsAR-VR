@@ -5,11 +5,7 @@ import numpy as np
 from PIL import Image
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import OpenGL.GLUT.fonts
 import OpenGL.GLUT as glut
-import OpenGL.GLUT.fonts as glf
-import OpenGL.GL as gl
-
 
 if not glfw.init():
     raise Exception("glfw can not be initialized!")
@@ -49,45 +45,31 @@ class DrawTool:
         }
         """
 
-    def drawString(self,string_data):
 
-        width = 1000
-        height = 1000
-        line_height = 200
-        _font =  glf.GLUT_BITMAP_9_BY_15
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glPushMatrix()
-        gl.glLoadIdentity()
+        self.vertex_src = """
+        # version 330
+        layout(location = 0) in vec3 a_position;
+        layout(location = 1) in vec3 a_color;
+        layout(location = 2) in vec2 a_texture;
+        uniform mat4 rotation;
+        out vec3 v_color;
+        out vec2 v_texture;
+        void main()
+        {
+            gl_Position = rotation * vec4(a_position, 1.0);
+            v_color = a_color;
+            v_texture = a_texture;
+            
+            //v_texture = 1 - a_texture;                      // Flips the texture vertically and horizontally
+            //v_texture = vec2(a_texture.s, 1 - a_texture.t); // Flips the texture vertically
+        }
+        """
 
-        gl.glOrtho(0, width, 0, height, -1, 1)
+        self.EBO = glGenBuffers(1)
+        self.VBO = glGenBuffers(1)
 
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPushMatrix()
-        gl.glLoadIdentity()
-
-        gl.glDisable(gl.GL_DEPTH_TEST)
-
-        gl.glDisable(gl.GL_LIGHTING)
-        gl.glColor3f(1, 0, 0)
-
-        pos = 20
-        gl.glRasterPos2i(10, height - pos)
-
-        for ch in string_data:
-            if ch == '\n':
-                pos = pos + line_height
-                gl.glRasterPos2i(10, height - pos)
-            else:
-                glut.glutBitmapCharacter(_font, ord(ch))
-
-        gl.glEnable(gl.GL_LIGHTING)
-        gl.glEnable(gl.GL_DEPTH_TEST)
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPopMatrix()
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        gl.glPopMatrix()
-
-
+        glBindBuffer(GL_ARRAY_BUFFER, self.VBO)
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.EBO)
 
     def window_resize(self):
         glViewport(0, 0, self.width, self.height)
@@ -175,45 +157,15 @@ class DrawTool:
 
 
     def load_shader(self,fragment_src):
-        self.vertex_src = """
-        # version 330
-        layout(location = 0) in vec3 a_position;
-        layout(location = 1) in vec3 a_color;
-        layout(location = 2) in vec2 a_texture;
-        uniform mat4 rotation;
-        out vec3 v_color;
-        out vec2 v_texture;
-        void main()
-        {
-            gl_Position = rotation * vec4(a_position, 1.0);
-            v_color = a_color;
-            v_texture = a_texture;
-            
-            //v_texture = 1 - a_texture;                      // Flips the texture vertically and horizontally
-            //v_texture = vec2(a_texture.s, 1 - a_texture.t); // Flips the texture vertically
-        }
-        """
-        ##chande out_color for illumination
-        # self.fragment_src = """
-        # # version 330
-        # in vec3 v_color;
-        # in vec2 v_texture;
-        # out vec4 out_color;
-        # uniform sampler2D s_texture;
-        # void main()
-        # {
-        #     out_color = texture(s_texture, v_texture)/1; // * vec4(v_color, 1.0f);
-        # }
-        # """
+        
+
         self.fragment_src = fragment_src 
 
         self.shader = compileProgram(compileShader(self.vertex_src, GL_VERTEX_SHADER), compileShader(self.fragment_src, GL_FRAGMENT_SHADER))
-        VBO = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, VBO)
-        EBO = glGenBuffers(1)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
-
+        # glBindBuffer(GL_ARRAY_BUFFER, self.VBO)
+        # glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.EBO)
         glUseProgram(self.shader)
+
         rotation_loc = glGetUniformLocation(self.shader, "rotation")
         glUniformMatrix4fv(rotation_loc, 1, GL_FALSE, np.identity(4))
 
