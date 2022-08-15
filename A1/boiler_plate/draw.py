@@ -93,20 +93,16 @@ class DrawTool:
         glViewport(0, 0, self.width, self.height)
 
     def window_close(self):
-
         return glfw.window_should_close(self.window)
 
     def clear(self):
-
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
     def swap_buffers(self):
-
         glfw.swap_buffers(self.window)
 
 
     def terminate(self):
-
         glfw.terminate()
 
     def open_image(self,type,path):
@@ -243,7 +239,6 @@ class DrawTool:
         glEnableVertexAttribArray(2)
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vert.itemsize * 8, ctypes.c_void_p(24))
         
-
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data)
 
         glEnable(GL_DEPTH_TEST)
